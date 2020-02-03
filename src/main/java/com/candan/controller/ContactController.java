@@ -1,13 +1,15 @@
-package com.candan.smart_watch_server;
+package com.candan.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import javax.validation.Valid;
 
+import com.candan.db.Contact;
 import com.candan.exceptions.BadResourceException;
 import com.candan.exceptions.ResourceAlreadyExistsException;
-import org.slf4j.Logger;
+import com.candan.services.ContactService;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,13 +26,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.log4j.Logger;
+
 @RestController
 @RequestMapping("/api")
 public class ContactController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = Logger.getLogger(this.getClass());
 
-    private final int ROW_PER_PAGE = 5;
+    private final int ROW_PER_PAGE = 5; //TODO This will configurative
 
     @Autowired
     private ContactService contactService;
@@ -53,6 +57,7 @@ public class ContactController {
             Contact book = contactService.findById(contactId);
             return ResponseEntity.ok(book);  // return 200, with json body
         } catch (Exception ex) {
+            //todo print ex on log error
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
         }
     }

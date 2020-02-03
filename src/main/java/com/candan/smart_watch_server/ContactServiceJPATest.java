@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.candan.db.Contact;
 import com.candan.exceptions.ResourceNotFoundException;
+import com.candan.services.ContactService;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

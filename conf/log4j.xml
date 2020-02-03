@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{DEFAULT} %5p [%t] %c{1} - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="appAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="./logs/application/application.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <param name="Append" value="true" />
+        <param name="Threshold" value="DEBUG" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{DEFAULT} %5p [%t] %c{1} - %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="alarmAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="./logs/alarm/alarm.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <param name="Append" value="true" />
+        <param name="Threshold" value="DEBUG" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{DEFAULT} %5p [%t] %c{1} - %m%n" />
+        </layout>
+    </appender>
+
+    <logger name="alarm">
+        <level value="trace" />
+        <appender-ref ref="alarmAppender"/>
+    </logger>
+
+
+    <logger name="com.candan" >
+        <level value="trace"/>
+        <appender-ref ref="appAppender"/>
+    </logger>
+
+    <root>
+        <level value="trace"/>
+        <appender-ref ref="stdout"/>
+    </root>
+
+</log4j:configuration>

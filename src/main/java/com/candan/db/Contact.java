@@ -1,4 +1,4 @@
-package com.candan.smart_watch_server;
+package com.candan.db;
 
 import java.io.Serializable;
 import javax.persistence.Column;

@@ -15,4 +15,19 @@ public class SensorInfo {
 
     private  String type;
 
+    public Long getId_sensor() {
+        return id_sensor;
+    }
+
+    public void setId_sensor(Long id_sensor) {
+        this.id_sensor = id_sensor;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
