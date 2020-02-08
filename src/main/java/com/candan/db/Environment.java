@@ -17,37 +17,47 @@ public class Environment {
     private  String type;
     private  String data;
 
-    public Long getId_environment() {
-        return id_environment;
+    private Date date;
+
+    @Override
+    public String toString() {
+        return "Environment{" +
+                "id_environment=" + id_environment +
+                ", type='" + type + '\'' +
+                ", data='" + data + '\'' +
+                ", date=" + date +
+                '}';
     }
 
-    public void setId_environment(Long id_environment) {
-        this.id_environment = id_environment;
+    public Long getId_environment() {
+        return id_environment;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getData() {
         return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
     }
 
     public Date getDate() {
         return date;
     }
 
+    public void setId_environment(Long id_environment) {
+        this.id_environment = id_environment;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
     public void setDate(Date date) {
         this.date = date;
     }
-
-    private Date date;
 }

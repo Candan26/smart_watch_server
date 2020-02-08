@@ -19,32 +19,42 @@ public class Heart {
 
     private Date date;
 
-    public Long getId_heart_rate() {
-        return id_heart_rate;
+    @Override
+    public String toString() {
+        return "Heart{" +
+                "id_heart_rate=" + id_heart_rate +
+                ", type='" + type + '\'' +
+                ", data='" + data + '\'' +
+                ", date=" + date +
+                '}';
     }
 
-    public void setId_heart_rate(Long id_heart_rate) {
-        this.id_heart_rate = id_heart_rate;
+    public Long getId_heart_rate() {
+        return id_heart_rate;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getData() {
         return data;
     }
 
-    public void setData(String data) {
-        this.data = data;
-    }
-
     public Date getDate() {
         return date;
+    }
+
+    public void setId_heart_rate(Long id_heart_rate) {
+        this.id_heart_rate = id_heart_rate;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public void setDate(Date date) {

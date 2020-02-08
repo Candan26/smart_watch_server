@@ -8,4 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserInfoRepository extends PagingAndSortingRepository<UserInfo, Long>,
         JpaSpecificationExecutor<UserInfo> {
-        }
+}

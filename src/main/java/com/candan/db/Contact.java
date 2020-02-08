@@ -26,6 +26,15 @@ public class Contact implements  Serializable {
 
     @NotBlank
     private String name;
+    private String phone;
+    private String email;
+    private String address1;
+    private String address2;
+    private String address3;
+    private String postalCode;
+
+    @Column(length = 4000)
+    private String note;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -103,13 +112,5 @@ public class Contact implements  Serializable {
         this.note = note;
     }
 
-    private String phone;
-    private String email;
-    private String address1;
-    private String address2;
-    private String address3;
-    private String postalCode;
 
-    @Column(length = 4000)
-    private String note;
 }
