@@ -46,7 +46,6 @@ public class UserInfoSpecification implements Specification<UserInfo> {
         if(filter.getWeight() !=null)
             p.getExpressions().add(criteriaBuilder.like(root.get("weight"), "%" + filter.getWeight() + "%"));
 
-
         return p;
     }
 }

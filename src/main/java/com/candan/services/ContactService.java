@@ -32,9 +32,9 @@ public class ContactService {
 
     public Contact findById(Long id) throws ResourceNotFoundException {
         Contact contact = contactRepository.findById(id).orElse(null);
-        logger.info("Searching data for id["+id.toString()+"]");
+        logger.info("Searching data for id["+id.toString()+"] on contact");
         if (contact==null) {
-            throw new ResourceNotFoundException("Cannot find Contact with id: " + id);
+            throw new ResourceNotFoundException("Cannot find Contact with id: [" + id+"]");
         }
         else return contact;
     }
