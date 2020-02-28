@@ -12,25 +12,28 @@ import java.sql.Date;
 public class Environment {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id_environment;
+    private Long id;
 
     private  String type;
     private  String data;
 
     private Date date;
 
+    private String person;
+
     @Override
     public String toString() {
         return "Environment{" +
-                "id_environment=" + id_environment +
+                "id=" + id +
                 ", type='" + type + '\'' +
                 ", data='" + data + '\'' +
                 ", date=" + date +
+                ", person "+ person +
                 '}';
     }
 
-    public Long getId_environment() {
-        return id_environment;
+    public Long getId() {
+        return id;
     }
 
     public String getType() {
@@ -45,8 +48,10 @@ public class Environment {
         return date;
     }
 
-    public void setId_environment(Long id_environment) {
-        this.id_environment = id_environment;
+    public String getPerson() { return person; }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setType(String type) {
@@ -60,4 +65,6 @@ public class Environment {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public void setPerson(String user) { this.person = user; }
 }

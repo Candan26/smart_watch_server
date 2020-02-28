@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//TODO id does not recognized by hibernate sequencer currently give id
 @Service
 public class EnvironmentService {
 
@@ -60,9 +60,9 @@ public class EnvironmentService {
     public Environment save(Environment environment) throws BadResourceException, ResourceAlreadyExistsException {
         if(!StringUtils.isEmpty(environment.getType())){
         logger.info("Trying to update environment which is ["+environment.getType()+"] ");
-        if(environment.getType() !=null && existsById(environment.getId_environment())){
+        if(environment.getType() !=null && existsById(environment.getId())){
             logger.error("Resource already exist throwing exception");
-            throw new ResourceAlreadyExistsException("Environment with id: " + environment.getId_environment() +
+            throw new ResourceAlreadyExistsException("Environment with id: " + environment.getId() +
                     " already exists");
         }
         return environmentRepository.save(environment);
@@ -75,10 +75,10 @@ public class EnvironmentService {
 
     public void  update(Environment environment) throws BadResourceException, org.springframework.data.rest.webmvc.ResourceNotFoundException {
         if (!StringUtils.isEmpty(environment.getType())) {
-            if (!existsById(environment.getId_environment())) {
-                throw new org.springframework.data.rest.webmvc.ResourceNotFoundException("Cannot find Environment with id: " + environment.getId_environment());
+            if (!existsById(environment.getId())) {
+                throw new org.springframework.data.rest.webmvc.ResourceNotFoundException("Cannot find Environment with id: " + environment.getId());
             }
-            logger.info("Trying to save envrionment which has ["+environment.getId_environment()+"] id name");
+            logger.info("Trying to save envrionment which has ["+environment.getId()+"] id name");
             environmentRepository.save(environment);
         }
         else {

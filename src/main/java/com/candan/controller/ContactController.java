@@ -35,7 +35,7 @@ public class ContactController {
 
     private final Logger logger = Logger.getLogger(this.getClass());
 
-    private final int ROW_PER_PAGE =5;
+    private final int ROW_PER_PAGE =50;
 
     @Autowired
     private ContactService contactService;

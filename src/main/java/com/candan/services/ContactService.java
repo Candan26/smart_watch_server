@@ -16,7 +16,10 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-
+//TODO write task on github
+//TODO User Info add e-mail contact address
+//TODO Add transaction id logic
+//TODO add grafana in code
 @Service
 public class ContactService {
 

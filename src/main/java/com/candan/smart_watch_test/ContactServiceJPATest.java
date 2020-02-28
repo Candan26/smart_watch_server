@@ -1,4 +1,4 @@
-package com.candan.smart_watch_server;
+package com.candan.smart_watch_test;
 
 import javax.sql.DataSource;
 import static org.junit.Assert.assertEquals;

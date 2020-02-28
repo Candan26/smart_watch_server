@@ -1,5 +1,6 @@
 package com.candan.controller;
 
+import com.candan.configuration.ConfigurationReader;
 import com.candan.db.UserInfo;
 import com.candan.exceptions.ResourceAlreadyExistsException;
 import com.candan.services.UserInfoService;
@@ -23,7 +24,8 @@ public class UserInfoController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final int ROW_PER_PAGE = 5; //TODO This will configurative
+    @Autowired
+    ConfigurationReader.MyConfig config;
 
     @Autowired
     private UserInfoService userInfoService;
@@ -34,9 +36,9 @@ public class UserInfoController {
             @RequestParam(required = false) String name){
         logger.info("Trying to find  all userInfo elements by page number ["+ pageNumber+"] and name ["+name+"]");
         if (StringUtils.isEmpty(name)){
-            return ResponseEntity.ok(userInfoService.findAll(pageNumber,ROW_PER_PAGE));
+            return ResponseEntity.ok(userInfoService.findAll(pageNumber,config.getRowPerPageUserInfo().intValue()));
         }else {
-            return ResponseEntity.ok(userInfoService.findAllByName(name, pageNumber, ROW_PER_PAGE));
+            return ResponseEntity.ok(userInfoService.findAllByName(name, pageNumber, config.getRowPerPageUserInfo().intValue()));
         }
     }
 
@@ -53,7 +55,7 @@ public class UserInfoController {
     }
 
     @PostMapping(value = "/userInfo")
-    public  ResponseEntity<UserInfo> addContact(@Valid @RequestBody UserInfo userInfo){
+    public  ResponseEntity<UserInfo> addUserInfo(@Valid @RequestBody UserInfo userInfo){
         try {
             logger.info("Adding new userInfo value ["+userInfo.toString()+"]");
             UserInfo newUserInfo = userInfoService.save(userInfo);

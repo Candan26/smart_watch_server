@@ -67,7 +67,7 @@ public class UserInfoService {
             throws BadResourceException, ResourceNotFoundException {
         if (!StringUtils.isEmpty(userInfo.getName())) {
             if (!existsById(userInfo.getId())) {
-                throw new ResourceNotFoundException("Cannot find Contact with id: " + userInfo.getId());
+                throw new ResourceNotFoundException("Cannot find Contact with id [" + userInfo.getId()+"]");//TODO correct this logic in each seq
             }
             userInfoRepository.save(userInfo);
         }

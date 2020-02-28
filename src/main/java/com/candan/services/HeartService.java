@@ -1,12 +1,9 @@
 package com.candan.services;
 
-import com.candan.db.Contact;
 import com.candan.db.Heart;
 import com.candan.exceptions.BadResourceException;
 import com.candan.exceptions.ResourceAlreadyExistsException;
-import com.candan.interfaces.ContactRepository;
 import com.candan.interfaces.HeartRepository;
-import com.candan.specification.ContactSpecification;
 import com.candan.specification.HeartSensorSpecification;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +42,7 @@ public class HeartService {
         return hearts;
     }
 
-    public List<Heart> findAllByName(String type, int pageNumber, int rowPerPage) {
+    public List<Heart> findAllByType(String type, int pageNumber, int rowPerPage) {
         logger.info("finding All numbers from type  ["+type +"] ");
         Heart filter = new Heart();
         filter.setType(type);
@@ -59,9 +56,9 @@ public class HeartService {
     public Heart save(Heart heart) throws BadResourceException, ResourceAlreadyExistsException {
         if (!StringUtils.isEmpty(heart.getType())) {
             logger.info("Trying to update heart which is ["+heart.getType()+"]");
-            if (heart.getId_heart_rate() != null && existsById(heart.getId_heart_rate())) {
+            if (heart.getId() != null && existsById(heart.getId())) {
                 logger.error("Resource already exist throwing exception");
-                throw new ResourceAlreadyExistsException("Heart with id: " + heart.getId_heart_rate() +
+                throw new ResourceAlreadyExistsException("Heart with id: " + heart.getId() +
                         " already exists");
             }
             return heartRepository.save(heart);
@@ -76,10 +73,10 @@ public class HeartService {
     public void update(Heart heart)
             throws BadResourceException, ResourceNotFoundException {
         if (!StringUtils.isEmpty(heart.getType())) {
-            if (!existsById(heart.getId_heart_rate())) {
-                throw new ResourceNotFoundException("Cannot find heart with id: " + heart.getId_heart_rate());
+            if (!existsById(heart.getId())) {
+                throw new ResourceNotFoundException("Cannot find heart with id: " + heart.getId());
             }
-            logger.info("Trying to save heart which has ["+heart.getId_heart_rate()+"] id name");
+            logger.info("Trying to save heart which has ["+heart.getId()+"] id name");
             heartRepository.save(heart);
         }
         else {

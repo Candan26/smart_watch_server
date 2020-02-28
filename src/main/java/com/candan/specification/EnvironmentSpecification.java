@@ -30,6 +30,9 @@ public class EnvironmentSpecification implements Specification<Environment> {
         if(filter.getDate()!=null)
             p.getExpressions().add(cb.like(root.get("date"), "%" + filter.getData() + "%"));
 
+        if(filter.getPerson()!=null)
+            p.getExpressions().add(cb.like(root.get("person"), "%" + filter.getPerson() + "%"));
+
         return p;
     }
 }

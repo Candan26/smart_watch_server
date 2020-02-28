@@ -1,6 +1,5 @@
 package com.candan.specification;
 
-import com.candan.db.Contact;
 import com.candan.db.Heart;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -22,12 +21,17 @@ public class HeartSensorSpecification implements Specification<Heart> {
         Predicate p = cb.disjunction();
         if(filter.getType()!=null)
             p.getExpressions().add(cb.like(root.get("type"), "%" + filter.getType() + "%"));
+
         if(filter.getData()!=null)
             p.getExpressions().add(cb.like(root.get("data"),"%"+filter.getData()+"%"));
+
         if(filter.getDate()!=null)
             p.getExpressions().add(cb.like(root.get("date"),"%"+filter.getDate()+"%"));
-        return  p;
 
+        if(filter.getPerson()!=null)
+            p.getExpressions().add(cb.like(root.get("person"),"%"+filter.getPerson()+"%"));
+
+        return  p;
     }
 
 }

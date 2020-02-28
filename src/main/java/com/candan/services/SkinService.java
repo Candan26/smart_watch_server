@@ -1,9 +1,12 @@
 package com.candan.services;
 
 import com.candan.db.Skin;
+import com.candan.exceptions.ResourceAlreadyExistsException;
 import com.candan.interfaces.SkinRepository;
+import com.candan.specification.SkinSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -37,21 +40,35 @@ public class SkinService {
     }
 
     public List<Skin> findAllByType(String type, int pageNumber, int row_per_page) {
-        return null;
+        Skin filter =  new Skin();
+        filter.setType(type);
+        Specification<Skin> spec = new SkinSpecification(filter); // TODO analyze this line
+        List<Skin> skinList = new ArrayList<>();
+        skinRepository.findAll(spec,PageRequest.of(pageNumber-1, row_per_page)).forEach(skinList::add);
+        return  skinList;
     }
 
-    public Skin save(Skin skinSensor) {
-        return null;
+    public Skin save(Skin skinSensor) throws ResourceAlreadyExistsException {
+        if (skinSensor.getId() != null && existsById(skinSensor.getId())) {
+            throw new ResourceAlreadyExistsException("Contact with id : [" + skinSensor.getId() +
+                    "] already exists"); //TODO correct log logic in each class
+        }
+     return skinRepository.save(skinSensor);//TODO check this logic for each class some of them does not need checking
+        //TODO add usernameLogic to each table
     }
 
     public void update(Skin skinSensor) {
+    if(!existsById(skinSensor.getId())){
+        throw    new ResourceNotFoundException("cannot find with id ["+skinSensor.getId()+"]");
+    }
+        skinRepository.save(skinSensor);
     }
 
     public void updateAttributes(long skinId, String type, String data, Date date) {
         Skin skinSensor = findById(skinId);
         skinSensor.setType(type);
         skinSensor.setData(data);
-        skinSensor.setSkin_time(date);
+        skinSensor.setDate(date);
         skinRepository.save(skinSensor);
     }
 
