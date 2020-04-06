@@ -12,5 +12,5 @@ if ps -ef | grep "$JAR_NAME" | grep -v "grep" >/dev/null
 then
   echo "Process $JAR_NAME is already running!"
 else
-  nohup java -d64 -Xmx1024m -Xms1024m -Dfile.encoding=UTF-8 -jar $BIN_PATH/$JAR_NAME $CONF_PATH/log4j.xml $CONF_PATH/ 2>&1 >> $NOHUP_OUT_PATH&
+  nohup java -Dfile.encoding=UTF-8 -jar $BIN_PATH/$JAR_NAME $CONF_PATH/log4j.xml $CONF_PATH/ 2>&1 >> $NOHUP_OUT_PATH&
 fi

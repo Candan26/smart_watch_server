@@ -26,6 +26,10 @@ public class ConfigurationReader {
         private Long rowPerPageSkin;
         @Value("${controller.userInfo.rowPerPage}")
         private Long rowPerPageUserInfo;
+        @Value("${excel.path}")
+        private String excelPath;
+
+        public String getExcelPath() { return excelPath;  }
 
         public Long getRowPerPageEnvironment() {
             return rowPerPageEnvironment;

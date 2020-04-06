@@ -43,6 +43,9 @@ public class UserInfoSpecification implements Specification<UserInfo> {
         if(filter.getSurname() !=null)
             p.getExpressions().add(criteriaBuilder.like(root.get("surname"), "%" + filter.getSurname() + "%"));
 
+        if(filter.getEmail() !=null)
+            p.getExpressions().add(criteriaBuilder.like(root.get("email"), "%" + filter.getEmail() + "%"));
+
         if(filter.getWeight() !=null)
             p.getExpressions().add(criteriaBuilder.like(root.get("weight"), "%" + filter.getWeight() + "%"));
 

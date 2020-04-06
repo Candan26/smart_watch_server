@@ -1,10 +1,15 @@
 package com.candan.controller;
 
 import com.candan.configuration.ConfigurationReader;
+import com.candan.cvs.ExportExcel;
+import com.candan.db.Environment;
+import com.candan.db.Heart;
+import com.candan.db.Skin;
 import com.candan.db.UserInfo;
-import com.candan.exceptions.ResourceAlreadyExistsException;
+import com.candan.services.EnvironmentService;
+import com.candan.services.HeartService;
+import com.candan.services.SkinService;
 import com.candan.services.UserInfoService;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,19 @@ public class UserInfoController {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private HeartService heartService;
+
+    @Autowired
+    private SkinService skinService;
+
+    @Autowired
+    private EnvironmentService environmentService;
+
+    @Autowired
+    ExportExcel exportExcel;
+
 
     @GetMapping (value = "/userInfo",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserInfo>> findAll(
@@ -68,6 +86,20 @@ public class UserInfoController {
         }
     }
 
+    @PostMapping(value = "/email")
+    public ResponseEntity<UserInfo> SendEmailToUser(@Valid @RequestBody UserInfo userInfo){
+        //
+        List<UserInfo> tmpUserInfoList = userInfoService.findAll(1,50);
+        List<Skin> skinList=skinService.findAll(1,50);
+        List<Environment> environmentList = environmentService.findAll(1,50);
+        List<Heart> heartList = heartService.findAll(1,50);
+
+        //ExportExcel tst = new ExportExcel();
+        exportExcel.WriteDataToExcelFile(skinList,environmentList,heartList);
+     return  ResponseEntity.ok(null);
+    }
+
+
     @PutMapping(value = "userInfo/{userInfoId}")
     public ResponseEntity<UserInfo> updateUserInfo( @Valid @RequestBody UserInfo userInfo,
                                                     @PathVariable long userInfoId){
@@ -86,13 +118,14 @@ public class UserInfoController {
     public ResponseEntity<Void> updateAttribute(@PathVariable long userInfoId,
                                                 @RequestBody String name,
                                                 @RequestBody String surName,
+                                                @RequestBody String email,
                                                 @RequestBody Long age,
                                                 @RequestBody Long weight,
                                                 @RequestBody Long height){
         try {
             logger.info("Updating attributes userInfoId["+userInfoId+"] name["+name+"] surName["+surName+
                     "] age["+age+"] weight["+weight+"] height["+height+"]");
-            userInfoService.updateParams(userInfoId,name,surName,age,weight,height);
+            userInfoService.updateParams(userInfoId,name,surName,age,weight,height,email);
             return ResponseEntity.ok().build();
         }catch (Exception ex){
             logger.error("Exception on ",ex);

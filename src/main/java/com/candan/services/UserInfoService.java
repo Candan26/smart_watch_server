@@ -78,7 +78,7 @@ public class UserInfoService {
         }
     }
 
-    public void updateParams(Long id, String name, String surName, Long age, Long weight, Long height)
+    public void updateParams(Long id, String name, String surName, Long age, Long weight, Long height, String email)
             throws ResourceNotFoundException {
         UserInfo userInfo = findById(id);
         userInfo.setName(name);
@@ -86,6 +86,7 @@ public class UserInfoService {
         userInfo.setAge(age);
         userInfo.setWeight(weight);
         userInfo.setHeight(height);
+        userInfo.setEmail(email);
         userInfoRepository.save(userInfo);
     }
 

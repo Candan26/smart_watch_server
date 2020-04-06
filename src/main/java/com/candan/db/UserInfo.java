@@ -18,6 +18,7 @@ public class UserInfo {
 
     private String name;
     private String surname;
+    private String email;
 
     private  Long age;
     private  Long weight;
@@ -29,6 +30,7 @@ public class UserInfo {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
+                ", email "+email+
                 ", age=" + age +
                 ", weight=" + weight +
                 ", height=" + height +
@@ -45,6 +47,10 @@ public class UserInfo {
 
     public String getSurname() {
         return surname;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public Long getAge() {
@@ -82,4 +88,6 @@ public class UserInfo {
     public void setHeight(Long height) {
         this.height = height;
     }
+
+    public void setEmail(String email) { this.email= email;   }
 }

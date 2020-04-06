@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.candan.configuration.ConfigurationReader;
-import com.candan.db.Contact;
 import com.candan.db.Environment;
 import com.candan.exceptions.BadResourceException;
 import com.candan.exceptions.ResourceAlreadyExistsException;
@@ -63,7 +62,7 @@ public class EnvironmentController {
     @PostMapping(value = "/environment")
     public  ResponseEntity<Environment> addEnvironmentSensor(@Valid @RequestBody Environment environmentSensor) throws URISyntaxException{
         try {
-            logger.info("Adding new skin contact value ["+environmentSensor.toString()+"]");
+            logger.info("Adding new environment contact value ["+environmentSensor.toString()+"]");
             Environment newEnvironmentSensor = environmentService.save(environmentSensor);
             return  ResponseEntity.created(new URI("/api/environment/"+newEnvironmentSensor.getId())).body(environmentSensor);
         }catch (ResourceAlreadyExistsException ex){
@@ -76,7 +75,7 @@ public class EnvironmentController {
     }
 
     @PutMapping(value = "/environment/{id}")
-    public ResponseEntity<Contact> updateEnvironmentSensor(@Valid @RequestBody Environment environment,
+    public ResponseEntity<Environment> updateEnvironmentSensor(@Valid @RequestBody Environment environment,
                                                  @PathVariable long id) {
 
         try {
