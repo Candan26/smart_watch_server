@@ -30,9 +30,7 @@ public class ExportExcel {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     public  void WriteDataToExcelFile(List<Skin> skinList, List<Environment> environmentList, List<Heart> heartList){
-
         parseSkinData(skinList);
         parseEnvironmentData(environmentList);
         parseHeartData(heartList);
@@ -70,17 +68,14 @@ public class ExportExcel {
     }
 
     public void parseEnvironmentData(List<Environment> environmentList){
-
         XSSFWorkbook wbEnvironment = new XSSFWorkbook();
         XSSFSheet sheet = wbEnvironment.createSheet("Data");
         Map<String, Object[]> dataHumidity = new TreeMap<String, Object[]>();
         Map<String, Object[]> dataTemperature = new TreeMap<String, Object[]>();
         Map<String, Object[]> dataLux = new TreeMap<String, Object[]>();
-
         dataHumidity.put("1", new Object[] {"ID", "TYPE", "DATE","DATA","PERSON"});
         dataTemperature.put("1", new Object[] {"ID", "TYPE", "DATE","DATA","PERSON"});
         dataLux.put("1", new Object[] {"ID", "TYPE", "DATE","DATA","PERSON"});
-
         int i=1,j=1,k=1;
         for(Environment env : environmentList){
             if(env.getType().equals("humidity")){
@@ -94,9 +89,8 @@ public class ExportExcel {
                 dataLux.put(""+k,new Object[]{""+env.getId(),env.getType(),env.getDate().toString(),env.getData(),env.getPerson()});
             }
         }
-
         setExcelTables(dataHumidity,sheet);
-        saveExcelFile(config.getExcelPath()+"/humidty.xlsx",wbEnvironment);
+        saveExcelFile(config.getExcelPath()+"/humidity.xlsx",wbEnvironment);
         setExcelTables(dataTemperature,sheet);
         saveExcelFile(config.getExcelPath()+"/temperature.xlsx",wbEnvironment);
         setExcelTables(dataLux,sheet);
@@ -124,7 +118,6 @@ public class ExportExcel {
     }
 
     public  void  saveExcelFile(String path,XSSFWorkbook workbook ){
-
         try
         {
             //Write the workbook in file system

@@ -35,19 +35,6 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @Autowired
-    private HeartService heartService;
-
-    @Autowired
-    private SkinService skinService;
-
-    @Autowired
-    private EnvironmentService environmentService;
-
-    @Autowired
-    ExportExcel exportExcel;
-
-
     @GetMapping (value = "/userInfo",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserInfo>> findAll(
             @RequestParam(value = "page",defaultValue = "1") int pageNumber,
@@ -86,18 +73,6 @@ public class UserInfoController {
         }
     }
 
-    @PostMapping(value = "/email")
-    public ResponseEntity<UserInfo> SendEmailToUser(@Valid @RequestBody UserInfo userInfo){
-        //
-        List<UserInfo> tmpUserInfoList = userInfoService.findAll(1,50);
-        List<Skin> skinList=skinService.findAll(1,50);
-        List<Environment> environmentList = environmentService.findAll(1,50);
-        List<Heart> heartList = heartService.findAll(1,50);
-
-        //ExportExcel tst = new ExportExcel();
-        exportExcel.WriteDataToExcelFile(skinList,environmentList,heartList);
-     return  ResponseEntity.ok(null);
-    }
 
 
     @PutMapping(value = "userInfo/{userInfoId}")

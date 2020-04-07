@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//http://localhost:8080/api/contacts?page=1
 @Configuration
 public class ConfigurationReader {
 
@@ -26,10 +25,28 @@ public class ConfigurationReader {
         private Long rowPerPageSkin;
         @Value("${controller.userInfo.rowPerPage}")
         private Long rowPerPageUserInfo;
+
+        @Value("${mail.user.port}")
+        private int mailUserPort;
+
+        @Value("${mail.user.name}")
+        private String mailUserName;
+        @Value("${mail.user.password}")
+        private String mailUserPassword;
+        @Value("${mail.user.host}")
+        private String mailUserHost;
         @Value("${excel.path}")
         private String excelPath;
 
+        public String getMailUserName() { return mailUserName; }
+
+        public String getMailUserPassword() { return mailUserPassword; }
+
+        public String getMailUserHost() { return mailUserHost;}
+
         public String getExcelPath() { return excelPath;  }
+
+        public int getMailUserPort() { return mailUserPort; }
 
         public Long getRowPerPageEnvironment() {
             return rowPerPageEnvironment;
