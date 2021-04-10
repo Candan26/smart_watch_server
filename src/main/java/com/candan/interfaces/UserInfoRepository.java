@@ -1,11 +1,12 @@
 package com.candan.interfaces;
 
-import com.candan.db.UserInfo;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.stereotype.Repository;
+import com.candan.mongo.swb.UserInfo;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-@Repository
-public interface UserInfoRepository extends PagingAndSortingRepository<UserInfo, Long>,
-        JpaSpecificationExecutor<UserInfo> {
+import java.util.Date;
+import java.util.List;
+
+public interface UserInfoRepository extends MongoRepository<UserInfo, String> {
+    public UserInfo findByName(String name);
+    public List<UserInfo> findByDate(Date date);
 }

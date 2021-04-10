@@ -2,24 +2,25 @@ package com.candan.mail;
 
 public class EmailBody {
     private  String address;
-    private int skinPageNumber;
-    private int skinRowPerPage;
-    private int heartPageNumber;
-    private int heartRowPerPage;
-    private int envPageNumber;
-    private int envRowPerPage;
+    private int max3003MaxNumber;
+    private int max30102MaxNumber;
+    private int maxSi7021MaxNumber;
+    private int skinResistanceMaxNumber;
+
+    public int getMax3003MaxNumber() {
+        return max3003MaxNumber;
+    }
+
+    public int getMax30102MaxNumber() {
+        return max30102MaxNumber;
+    }
+
+    public int getMaxSi7021MaxNumber() {
+        return maxSi7021MaxNumber;
+    }
 
     public String getAddress() { return address;  }
 
-    public int getSkinPageNumber() { return skinPageNumber; }
+    public int getSkinResistanceMaxNumber() { return skinResistanceMaxNumber; }
 
-    public int getSkinRowPerPage() { return skinRowPerPage; }
-
-    public int getHeartPageNumber() { return heartPageNumber; }
-
-    public int getHeartRowPerPage() { return heartRowPerPage; }
-
-    public int getEnvPageNumber() { return envPageNumber; }
-
-    public int getEnvRowPerPage() { return envRowPerPage; }
 }

@@ -45,11 +45,10 @@ public class EmailServiceImpl  implements EmailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text);
-            helper.addAttachment( new FileSystemResource(pathToAttachment+"/hr.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/hr.xlsx"));
-            helper.addAttachment( new FileSystemResource(pathToAttachment+"/humidity.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/humidity.xlsx"));
-            helper.addAttachment( new FileSystemResource(pathToAttachment+"/luminance.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/luminance.xlsx"));
             helper.addAttachment( new FileSystemResource(pathToAttachment+"/skin.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/skin.xlsx"));
-            helper.addAttachment( new FileSystemResource(pathToAttachment+"/temperature.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/temperature.xlsx"));
+            helper.addAttachment( new FileSystemResource(pathToAttachment+"/max3003.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/max3003.xlsx"));
+            helper.addAttachment( new FileSystemResource(pathToAttachment+"/max30102.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/max30102.xlsx"));
+            helper.addAttachment( new FileSystemResource(pathToAttachment+"/Si7021.xlsx").getFilename(), new FileSystemResource(pathToAttachment+"/Si7021.xlsx"));
             emailSender.send(message);
             logger.info("Email send successfully");
         } catch ( MessagingException e) {

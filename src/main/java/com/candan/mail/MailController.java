@@ -2,13 +2,11 @@ package com.candan.mail;
 
 import com.candan.configuration.ConfigurationReader;
 import com.candan.cvs.ExportExcel;
-import com.candan.db.Environment;
-import com.candan.db.Heart;
-import com.candan.db.Skin;
-import com.candan.db.UserInfo;
-import com.candan.services.EnvironmentService;
-import com.candan.services.HeartService;
-import com.candan.services.SkinService;
+import com.candan.mongo.swb.*;
+import com.candan.services.Max3003Service;
+import com.candan.services.Max30102Service;
+import com.candan.services.Si7021Service;
+import com.candan.services.SkinResistanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +28,18 @@ import java.util.Properties;
 @RequestMapping("/api")
 public class MailController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private HeartService heartService;
 
     @Autowired
-    private SkinService skinService;
+    private SkinResistanceService skinResistanceService;
 
     @Autowired
-    private EnvironmentService environmentService;
+    private Max3003Service max3003Service;
+
+    @Autowired
+    private Max30102Service max30102Service;
+
+    @Autowired
+    private Si7021Service si7021Service;
 
     @Autowired
     private ConfigurationReader.MyConfig config;
@@ -48,19 +50,21 @@ public class MailController {
     @Autowired
     private EmailServiceImpl emailService;
 
-    private String mailFromServerText="This mail for sending raw data's of smart watch server database " +
+    private String mailFromServerText = "This mail for sending raw data's of smart watch server database " +
             "for more information please check the excel files in attachment";
     private String mailFromServerSubject = "Server Data ";
 
     @PostMapping(value = "/email")
-    public ResponseEntity<UserInfo> SendEmailToUser(@Valid @RequestBody EmailBody body){
-        List<Skin> skinList=skinService.findAll(body.getSkinPageNumber(),body.getSkinRowPerPage());
-        List<Environment> environmentList = environmentService.findAll(body.getEnvPageNumber(),body.getEnvRowPerPage());
-        List<Heart> heartList = heartService.findAll(body.getHeartPageNumber(),body.getHeartRowPerPage());
+    public ResponseEntity<UserInfo> SendEmailToUser(@Valid @RequestBody EmailBody body) {
+        List<Max3003> max3003List = max3003Service.findListByMaxNumber(body.getSkinResistanceMaxNumber());
+        List<Max30102> max30102List = max30102Service.findListByMaxNumber(body.getMax30102MaxNumber());
+        List<Si7021> si7021List = si7021Service.findListByMaxNumber(body.getMaxSi7021MaxNumber());
+        List<SkinResistance> skinResistanceList = skinResistanceService.findListByMaxNumber(body.getSkinResistanceMaxNumber());
+
         logger.info("getting Database values and saving them on excel file");
-        exportExcel.WriteDataToExcelFile(skinList,environmentList,heartList);
-        emailService.sendMessageWithAttachment(body.getAddress(),mailFromServerSubject,mailFromServerText,config.getExcelPath());
-        return  ResponseEntity.ok(null);
+        exportExcel.WriteDataToExcelFile(max3003List, max30102List, si7021List,skinResistanceList);
+        emailService.sendMessageWithAttachment(body.getAddress(), mailFromServerSubject, mailFromServerText, config.getExcelPath());
+        return ResponseEntity.ok(null);
     }
 
     @Lazy

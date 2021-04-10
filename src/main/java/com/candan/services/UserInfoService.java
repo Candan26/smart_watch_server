@@ -1,105 +1,131 @@
 package com.candan.services;
 
 
+import com.candan.mongo.swb.UserInfo;
 import com.candan.interfaces.UserInfoRepository;
-import com.candan.specification.UserInfoSpecification;
-import com.candan.db.UserInfo;
-import com.candan.exceptions.BadResourceException;
-import com.candan.exceptions.ResourceAlreadyExistsException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserInfoService {
 
+    private final Logger logger = Logger.getLogger(this.getClass());
+
     @Autowired
     private UserInfoRepository userInfoRepository;
 
-    private boolean existsById(Long id) {
-        return userInfoRepository.existsById(id);
+    public void update(UserInfo userInfo) {
+        try {
+            UserInfo tmpObj = userInfoRepository.findById(userInfo.getId()).get();
+            getClonedData(tmpObj, userInfo);
+            userInfoRepository.save(tmpObj);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+        }
     }
 
-    public UserInfo findById(Long id) throws ResourceNotFoundException {
-        UserInfo userInfo = userInfoRepository.findById(id).orElse(null);
-        if (userInfo == null) {
-            throw new ResourceNotFoundException("Cannot find Contact with id: " + id);
-        } else return userInfo;
+    public void updateByName(UserInfo userInfo) {
+        try {
+            UserInfo tmpObj = userInfoRepository.findByName(userInfo.getName());
+            getClonedData(tmpObj, userInfo);
+            userInfoRepository.save(tmpObj);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+        }
     }
 
-    public List<UserInfo> findAll(int pageNumber, int rowPerPage) {
-        List<UserInfo> userInfo = new ArrayList<>();
-        userInfoRepository.findAll(PageRequest.of(pageNumber - 1, rowPerPage)).forEach(userInfo::add);
-        return userInfo;
+    private void getClonedData(UserInfo tmpObj, UserInfo userInfo) {
+        tmpObj.setEmail(userInfo.getEmail());
+        tmpObj.setName(userInfo.getName());
+        tmpObj.setSurname(userInfo.getSurname());
+        tmpObj.setAge(userInfo.getAge());
+        tmpObj.setHeight(userInfo.getHeight());
+        tmpObj.setWeight(userInfo.getWeight());
     }
 
-    public List<UserInfo> findAllByName(String name, int pageNumber, int rowPerPage) {
-        UserInfo filter = new UserInfo();
-        filter.setName(name);
-        Specification<UserInfo> spec = new UserInfoSpecification(filter);
-
-        List<UserInfo> userInfoList = new ArrayList<>();
-        userInfoRepository.findAll(spec, PageRequest.of(pageNumber - 1, rowPerPage)).forEach(userInfoList::add);
-        return userInfoList;
-    }
-
-    public UserInfo save(UserInfo userInfo) throws BadResourceException, ResourceAlreadyExistsException {
-        if (!StringUtils.isEmpty(userInfo.getName())) {
-            if (userInfo.getId() != null && existsById(userInfo.getId())) {
-                throw new ResourceAlreadyExistsException("Contact with id: " + userInfo.getId() +
-                        " already exists");
-            }
+    public UserInfo save(UserInfo userInfo) {
+        try {
             return userInfoRepository.save(userInfo);
-        } else {
-            BadResourceException exc = new BadResourceException("Failed to save contact");
-            exc.addErrorMessage("Contact is null or empty");
-            throw exc;
+        } catch (Exception ex) {
+            logger.error("Exception on", ex);
+            return null;
         }
     }
 
-    public void update(UserInfo userInfo)
-            throws BadResourceException, ResourceNotFoundException {
-        if (!StringUtils.isEmpty(userInfo.getName())) {
-            if (!existsById(userInfo.getId())) {
-                throw new ResourceNotFoundException("Cannot find Contact with id [" + userInfo.getId()+"]");//TODO correct this logic in each seq
-            }
-            userInfoRepository.save(userInfo);
-        }
-        else {
-            BadResourceException exc = new BadResourceException("Failed to save contact");
-            exc.addErrorMessage("Contact is null or empty");
-            throw exc;
+    public UserInfo findListByName(String name) {
+        try {
+            return userInfoRepository.findByName(name);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
         }
     }
 
-    public void updateParams(Long id, String name, String surName, Long age, Long weight, Long height, String email)
-            throws ResourceNotFoundException {
-        UserInfo userInfo = findById(id);
-        userInfo.setName(name);
-        userInfo.setSurname(surName);
-        userInfo.setAge(age);
-        userInfo.setWeight(weight);
-        userInfo.setHeight(height);
-        userInfo.setEmail(email);
-        userInfoRepository.save(userInfo);
+    public List<UserInfo> findListByDate(Date date) {
+        try {
+            return userInfoRepository.findByDate(date);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return new ArrayList<>();
+        }
     }
 
-    public void deleteById(Long id) throws ResourceNotFoundException {
-        if (!existsById(id)) {
-            throw new ResourceNotFoundException("Cannot find contact with id: " + id);
+    public List<UserInfo> findByDate(Date date) {
+        try {
+            return userInfoRepository.findByDate(date);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
         }
-        else {
+    }
+
+    public void updateParams(String userInfoId, String name, String surName, Long age, Long weight, Long height, String email) {
+        try {
+            UserInfo userInfo = findById(userInfoId);
+            userInfo.setName(name);
+            userInfo.setSurname(surName);
+            userInfo.setAge(age);
+            userInfo.setWeight(weight);
+            userInfo.setHeight(height);
+            userInfo.setEmail(email);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+        }
+    }
+
+    public void deleteById(String id) {
+        try {
             userInfoRepository.deleteById(id);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
         }
     }
 
-    public Long count() {
-        return userInfoRepository.count();
+    public UserInfo findById(String id) {
+        try {
+            return userInfoRepository.findById(id).get();
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
+        }
+    }
+
+    public List<UserInfo> findAll(int maxVal) {
+        try {
+            Pageable pageableRequest = PageRequest.of(0, maxVal);
+            Page<UserInfo> page = userInfoRepository.findAll(pageableRequest);
+            return page.getContent();
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
+        }
     }
 }

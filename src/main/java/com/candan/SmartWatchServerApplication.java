@@ -15,12 +15,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class SmartWatchServerApplication   {
     public static void main(String[] args) {
-
-        DOMConfigurator.configureAndWatch("./conf/log4j.xml");
-        ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(SmartWatchServerApplication.class)
-                .properties("spring.config.name:application", "spring.config.location:./conf/").build().run(args);
-
+        SpringApplication.run(SmartWatchServerApplication.class, args);
     }
-
-
 }
