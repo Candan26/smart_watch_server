@@ -1,5 +1,6 @@
 package com.candan.services;
 
+import com.candan.mongo.swb.UserInfo;
 import com.candan.utils.img.Photo;
 import com.candan.interfaces.WebsiteRepository;
 import com.candan.mongo.web.Website;
@@ -28,6 +29,15 @@ public class WebsiteService {
 
     @Autowired
     private MessageService messageService;
+
+    public Website findListByUserName(String userName) {
+        try {
+            return websiteRepository.findWebSiteByUserName(userName).get(0);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
+        }
+    }
 
     public void updatePeople(Website website){
         try {

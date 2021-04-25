@@ -53,7 +53,15 @@ public class MessageService {
         }
     }
 
-    public void deleteById(List<String> ids) {
+    public void deleteById(String id) {
+        try {
+            messageRepository.deleteById(id);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+        }
+    }
+
+    public void deleteByIdList(List<String> ids) {
         try {
             for (String id : ids)
                 messageRepository.deleteById(id);
@@ -61,5 +69,4 @@ public class MessageService {
             logger.error("Exception on ", ex);
         }
     }
-
 }

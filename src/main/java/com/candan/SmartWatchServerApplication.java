@@ -1,6 +1,7 @@
 package com.candan;
 
 
+import com.candan.mail.EmailServiceImpl;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.springframework.boot.SpringApplication;
 
@@ -15,6 +16,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class SmartWatchServerApplication   {
     public static void main(String[] args) {
-        SpringApplication.run(SmartWatchServerApplication.class, args);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(SmartWatchServerApplication.class, args);
+        applicationContext.getBean(EmailServiceImpl.class).run();
     }
 }

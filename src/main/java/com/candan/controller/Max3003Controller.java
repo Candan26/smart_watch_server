@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Date;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -43,11 +44,11 @@ public class Max3003Controller {
 
     @GetMapping(value = "/max3003/date", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Max3003>> findByDate(
-            @RequestParam(value = "date_from", defaultValue = "") Date  from,
-            @RequestParam(value = "date_to", defaultValue = "") Date to) {
-        logger.info("Trying to find  all Max3003 elements from date ["+from+"] to ["+to+"]");
+            @RequestParam(value = "date_from", defaultValue = "") Long  from,
+            @RequestParam(value = "date_to", defaultValue = "") Long to) {
+        logger.info("Trying to find  all Max3003 elements from date ["+new Date(from)+"] to ["+ new Date(to)+"]");
         try {
-            return ResponseEntity.ok(max3003Service.findListByDate(from, to));
+            return ResponseEntity.ok(max3003Service.findListByDate(new Date(from), new Date(to)));
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body

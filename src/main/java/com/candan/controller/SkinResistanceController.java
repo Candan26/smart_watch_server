@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,11 +81,11 @@ public class SkinResistanceController {
 
     @GetMapping(value = "/skin/date", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SkinResistance>> findByDate(
-            @RequestParam(value = "date_from", defaultValue = "") Date from,
-            @RequestParam(value = "date_to", defaultValue = "") Date to) {
-        logger.info("Trying to find  all skin elements from date [" + from + "] to [" + to + "]");
+            @RequestParam(value = "date_from", defaultValue = "") Long from,
+            @RequestParam(value = "date_to", defaultValue = "") Long to) {
+        logger.info("Trying to find  all skin elements from date [" + new java.util.Date(from) + "] to [" + new java.util.Date(to)+ "]");
         try {
-            return ResponseEntity.ok(skinResistanceService.findListByDate(from, to));
+            return ResponseEntity.ok(skinResistanceService.findListByDate(new java.util.Date(from), new java.util.Date(to)));
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body

@@ -5,4 +5,6 @@ public interface EmailService {
                                    String subject,
                                    String text,
                                    String pathToAttachment) ;
+
+    void checkUserMessageAndSendMail();
 }

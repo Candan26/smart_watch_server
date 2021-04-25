@@ -15,10 +15,10 @@ public class ConfigurationReader {
 
     public static class MyConfig {
 
-        @Value("${controller.environment.rowPerPage}")
-        private Long rowPerPageEnvironment;
-        @Value("${controller.heart.rowPerPage}")
-        private Long rowPerPageHeart;
+        @Value("${mail.thread.timeInSec}")
+        private Long mailThreadTimeInSec;
+        @Value("${mail.website.maxMailCount}")
+        private Long websiteMaxMailCount;
         @Value("${controller.sensorInfo.rowPerPage}")
         private Long rowPerPageSensorInfo;
         @Value("${controller.skin.rowPerPage}")
@@ -48,12 +48,12 @@ public class ConfigurationReader {
 
         public int getMailUserPort() { return mailUserPort; }
 
-        public Long getRowPerPageEnvironment() {
-            return rowPerPageEnvironment;
+        public Long getMailThreadTimeInSec() {
+            return mailThreadTimeInSec;
         }
 
-        public Long getRowPerPageHeart() {
-            return rowPerPageHeart;
+        public Long getWebsiteMaxMailCount() {
+            return websiteMaxMailCount;
         }
 
         public Long getRowPerPageSensorInfo() {

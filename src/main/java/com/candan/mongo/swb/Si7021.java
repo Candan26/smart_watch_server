@@ -3,7 +3,7 @@ package com.candan.mongo.swb;
 
 import org.springframework.data.annotation.Id;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Si7021 {
     @Id
