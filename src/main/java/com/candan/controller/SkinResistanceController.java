@@ -7,7 +7,7 @@ import com.candan.mongo.swb.SkinResistance;
 import com.candan.exceptions.BadResourceException;
 import com.candan.services.SkinResistanceService;
 import org.apache.log4j.Logger;
-import org.springframework.amqp.core.AmqpTemplate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,9 +28,6 @@ import java.util.List;
 public class SkinResistanceController {
 
     private final Logger logger = Logger.getLogger(this.getClass());
-
-    @Autowired
-    private AmqpTemplate amqpTemplate;
 
     @Autowired
     ConfigurationReader.MyConfig config;
