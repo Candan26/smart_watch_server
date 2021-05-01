@@ -1,5 +1,6 @@
 package com.candan.services;
 
+import com.candan.mongo.swb.Max30102;
 import com.candan.mongo.swb.Si7021;
 import com.candan.exceptions.BadResourceException;
 import com.candan.interfaces.Si7021Repository;
@@ -12,10 +13,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class Si7021Service {
     private final Logger logger = Logger.getLogger(this.getClass());
+
+    public LinkedBlockingQueue<Si7021> lbq = new LinkedBlockingQueue<>();
 
     @Autowired
     private Si7021Repository si7021Repository;

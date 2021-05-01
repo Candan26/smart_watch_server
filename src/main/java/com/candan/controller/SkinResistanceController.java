@@ -7,6 +7,7 @@ import com.candan.mongo.swb.SkinResistance;
 import com.candan.exceptions.BadResourceException;
 import com.candan.services.SkinResistanceService;
 import org.apache.log4j.Logger;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,9 @@ public class SkinResistanceController {
     private final Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
+    private AmqpTemplate amqpTemplate;
+
+    @Autowired
     ConfigurationReader.MyConfig config;
 
     @Autowired
@@ -41,6 +45,7 @@ public class SkinResistanceController {
             SkinResistance sr = new SkinResistance("relax","12345","cagri","candan",new Date(1234L));
             System.out.println("Testing Creating new sr object: " + sr.toString());
             System.out.println("Saving sr values");
+
             skinResistanceService.save(sr);
             String id = sr.getId();
             SkinResistance ts = skinResistanceService.findById(id);
@@ -60,6 +65,7 @@ public class SkinResistanceController {
             skinResistanceService.save(sr);
             System.out.println("Deleting sr by date");
             skinResistanceService.deleteByDate(new Date(1234L));
+
             return ResponseEntity.ok(sr);  // return 200, with json body
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
@@ -129,8 +135,31 @@ public class SkinResistanceController {
         }
     }
 
+    @GetMapping(value = "/skin/getQueue", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SkinResistance> getElementFromQueue() {
+        logger.info("The size od queue [" + skinResistanceService.lbq.size() + "]");
+        try {
+            return ResponseEntity.ok( skinResistanceService.lbq.poll());
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
+        }
+    }
+
+    @PostMapping(value = "/skin/queue")
+    public ResponseEntity<SkinResistance> addmax30102RabbitSensor(@Valid @RequestBody SkinResistance skinSensor) throws URISyntaxException {
+        try {
+            logger.info("Adding new skin contact value [" + skinSensor.toString() + "]");
+            skinResistanceService.lbq.add(skinSensor);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @PostMapping(value = "/skin")
-    public ResponseEntity<SkinResistance> addEnvironmentSensor(@Valid @RequestBody SkinResistance skinResistance) throws URISyntaxException {
+    public ResponseEntity<SkinResistance> addSkinResistanceSensor(@Valid @RequestBody SkinResistance skinResistance) throws URISyntaxException {
         try {
             logger.info("Adding new skin contact value [" + skinResistance.toString() + "]");
             SkinResistance newSkinResistance = skinResistanceService.save(skinResistance);

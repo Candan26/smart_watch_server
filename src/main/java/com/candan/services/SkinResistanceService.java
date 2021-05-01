@@ -1,5 +1,6 @@
 package com.candan.services;
 
+import com.candan.mongo.swb.Si7021;
 import com.candan.mongo.swb.SkinResistance;
 import com.candan.exceptions.BadResourceException;
 import com.candan.interfaces.SkinResistanceRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class SkinResistanceService {
@@ -21,6 +23,8 @@ public class SkinResistanceService {
 
     @Autowired
     private SkinResistanceRepository skinResistanceRepository;
+
+    public LinkedBlockingQueue<SkinResistance> lbq = new LinkedBlockingQueue<>();
 
     public void update(SkinResistance skinResistance) throws BadResourceException, org.springframework.data.rest.webmvc.ResourceNotFoundException {
         try {

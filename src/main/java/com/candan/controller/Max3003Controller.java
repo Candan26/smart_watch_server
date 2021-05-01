@@ -1,10 +1,11 @@
 package com.candan.controller;
 
 import com.candan.configuration.ConfigurationReader;
-import com.candan.mongo.swb.Max3003;
 import com.candan.exceptions.BadResourceException;
+import com.candan.mongo.swb.Max3003;
 import com.candan.services.Max3003Service;
 import org.apache.log4j.Logger;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,9 +96,31 @@ public class Max3003Controller {
         }
     }
 
+    @GetMapping(value = "/max3003/getQueue", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Max3003> getElementFromQueue() {
+        logger.info("The size od queue [" + max3003Service.lbq.size() + "]");
+        try {
+            return ResponseEntity.ok( max3003Service.lbq.poll());
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
+        }
+    }
+
+    @PostMapping(value = "/max3003/queue")
+    public ResponseEntity<Max3003> addMax3003RabbitSensor(@Valid @RequestBody Max3003 max3003Sensor) throws URISyntaxException {
+        try {
+            logger.info("Adding new Max3003 contact value [" + max3003Sensor.toString() + "]");
+            max3003Service.lbq.add(max3003Sensor);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
     @PostMapping(value = "/max3003")
-    public ResponseEntity<Max3003> addEnvironmentSensor(@Valid @RequestBody Max3003 max3003Sensor) throws URISyntaxException {
+    public ResponseEntity<Max3003> addMax3003Sensor(@Valid @RequestBody Max3003 max3003Sensor) throws URISyntaxException {
         try {
             logger.info("Adding new Max3003 contact value [" + max3003Sensor.toString() + "]");
             Max3003 newMax3003Sensor = max3003Service.save(max3003Sensor);

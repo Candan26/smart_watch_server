@@ -12,10 +12,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class Max3003Service {
+
     private final Logger logger = Logger.getLogger(this.getClass());
+
+    public LinkedBlockingQueue<Max3003> lbq = new LinkedBlockingQueue<>();
 
     @Autowired
     private Max3003Repository max3003Repository;

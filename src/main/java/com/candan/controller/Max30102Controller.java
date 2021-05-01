@@ -93,8 +93,31 @@ public class Max30102Controller {
         }
     }
 
+    @GetMapping(value = "/max30102/getQueue", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Max30102> getElementFromQueue() {
+        logger.info("The size od queue [" + max30102Service.lbq.size() + "]");
+        try {
+            return ResponseEntity.ok( max30102Service.lbq.poll());
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
+        }
+    }
+
+    @PostMapping(value = "/max30102/queue")
+    public ResponseEntity<Max30102> addMax30102RabbitSensor(@Valid @RequestBody Max30102 max30102Sensor) throws URISyntaxException {
+        try {
+            logger.info("Adding new max30102 contact value [" + max30102Sensor.toString() + "]");
+            max30102Service.lbq.add(max30102Sensor);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @PostMapping(value = "/max30102")
-    public ResponseEntity<Max30102> addEnvironmentSensor(@Valid @RequestBody Max30102 max30102Sensor) throws URISyntaxException {
+    public ResponseEntity<Max30102> addMax30102Sensor(@Valid @RequestBody Max30102 max30102Sensor) throws URISyntaxException {
         try {
             logger.info("Adding new max30102 contact value [" + max30102Sensor.toString() + "]");
             Max30102 newMax30102Sensor = max30102Service.save(max30102Sensor);

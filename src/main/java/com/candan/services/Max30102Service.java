@@ -1,5 +1,6 @@
 package com.candan.services;
 
+import com.candan.mongo.swb.Max3003;
 import com.candan.mongo.swb.Max30102;
 import com.candan.exceptions.BadResourceException;
 import com.candan.interfaces.Max30102Repository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class Max30102Service {
@@ -19,6 +21,8 @@ public class Max30102Service {
 
     @Autowired
     private Max30102Repository max30102Repository;
+
+    public LinkedBlockingQueue<Max30102> lbq = new LinkedBlockingQueue<>();
 
     public void update(Max30102 max30102) throws BadResourceException, org.springframework.data.rest.webmvc.ResourceNotFoundException {
         try {

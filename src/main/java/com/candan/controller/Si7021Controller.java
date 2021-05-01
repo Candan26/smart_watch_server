@@ -92,8 +92,31 @@ public class Si7021Controller {
         }
     }
 
+    @GetMapping(value = "/si7021/getQueue", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Si7021> getElementFromQueue() {
+        logger.info("The size od queue [" + si7021Service.lbq.size() + "]");
+        try {
+            return ResponseEntity.ok( si7021Service.lbq.poll());
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
+        }
+    }
+
+    @PostMapping(value = "/si7021/queue")
+    public ResponseEntity<Si7021> addSi7021RabbitSensor(@Valid @RequestBody Si7021 si7021Sensor) throws URISyntaxException {
+        try {
+            logger.info("Adding new si7021 contact value [" + si7021Sensor.toString() + "]");
+            si7021Service.lbq.add(si7021Sensor);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @PostMapping(value = "/si7021")
-    public ResponseEntity<Si7021> addEnvironmentSensor(@Valid @RequestBody Si7021 si7021Sensor) throws URISyntaxException {
+    public ResponseEntity<Si7021> addTemperatureAndHumidity(@Valid @RequestBody Si7021 si7021Sensor) throws URISyntaxException {
         try {
             logger.info("Adding new Si7021 contact value [" + si7021Sensor.toString() + "]");
             Si7021 newSi7021Sensor = si7021Service.save(si7021Sensor);
@@ -105,7 +128,7 @@ public class Si7021Controller {
     }
 
     @PutMapping(value = "/si7021")
-    public ResponseEntity<Si7021> updateMax3003Sensor(@Valid @RequestBody Si7021 Si7021) {
+    public ResponseEntity<Si7021> updateSi7021Sensor(@Valid @RequestBody Si7021 Si7021) {
         try {
             logger.info("updating si7021 with id [" + Si7021.getId() + "] " + Si7021.toString());
             si7021Service.update(Si7021);
