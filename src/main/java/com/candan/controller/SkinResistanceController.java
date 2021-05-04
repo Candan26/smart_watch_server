@@ -136,7 +136,11 @@ public class SkinResistanceController {
     public ResponseEntity<SkinResistance> getElementFromQueue() {
         logger.info("The size od queue [" + skinResistanceService.lbq.size() + "]");
         try {
-            return ResponseEntity.ok( skinResistanceService.lbq.poll());
+            SkinResistance skinResistance = skinResistanceService.lbq.poll();
+            if (skinResistance == null){
+                skinResistance = new SkinResistance("","","","",null);
+            }
+            return ResponseEntity.ok(skinResistance);
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
@@ -146,7 +150,7 @@ public class SkinResistanceController {
     @PostMapping(value = "/skin/queue")
     public ResponseEntity<SkinResistance> addmax30102RabbitSensor(@Valid @RequestBody SkinResistance skinSensor) throws URISyntaxException {
         try {
-            logger.info("Adding new skin contact value [" + skinSensor.toString() + "]");
+            logger.info("Adding new skin contact value on queue  [" + skinSensor.toString() + "]");
             skinResistanceService.lbq.add(skinSensor);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (Exception ex) {

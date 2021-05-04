@@ -96,7 +96,11 @@ public class Si7021Controller {
     public ResponseEntity<Si7021> getElementFromQueue() {
         logger.info("The size od queue [" + si7021Service.lbq.size() + "]");
         try {
-            return ResponseEntity.ok( si7021Service.lbq.poll());
+            Si7021 si7021 = si7021Service.lbq.poll();
+           if( si7021 == null){
+               si7021 = new Si7021("","","","","",null);
+           }
+            return ResponseEntity.ok(si7021);
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
@@ -106,7 +110,7 @@ public class Si7021Controller {
     @PostMapping(value = "/si7021/queue")
     public ResponseEntity<Si7021> addSi7021RabbitSensor(@Valid @RequestBody Si7021 si7021Sensor) throws URISyntaxException {
         try {
-            logger.info("Adding new si7021 contact value [" + si7021Sensor.toString() + "]");
+            logger.info("Adding new si7021 contact value on queue  [" + si7021Sensor.toString() + "]");
             si7021Service.lbq.add(si7021Sensor);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (Exception ex) {

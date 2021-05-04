@@ -100,7 +100,11 @@ public class Max3003Controller {
     public ResponseEntity<Max3003> getElementFromQueue() {
         logger.info("The size od queue [" + max3003Service.lbq.size() + "]");
         try {
-            return ResponseEntity.ok( max3003Service.lbq.poll());
+            Max3003 max3003 = max3003Service.lbq.poll();
+            if(max3003 == null){
+                max3003 = new Max3003("","","","","",null);
+            }
+            return ResponseEntity.ok(max3003);
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
@@ -110,7 +114,7 @@ public class Max3003Controller {
     @PostMapping(value = "/max3003/queue")
     public ResponseEntity<Max3003> addMax3003RabbitSensor(@Valid @RequestBody Max3003 max3003Sensor) throws URISyntaxException {
         try {
-            logger.info("Adding new Max3003 contact value [" + max3003Sensor.toString() + "]");
+            logger.info("Adding new Max3003 contact value on queue  [" + max3003Sensor.toString() + "]");
             max3003Service.lbq.add(max3003Sensor);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (Exception ex) {
