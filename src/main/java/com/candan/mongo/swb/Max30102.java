@@ -11,19 +11,39 @@ public class Max30102 {
     private String status;
     private String hr;
     private String spo2;
+    private String ired;
+    private String red;
     private String diff;
     private String personName;
     private String personSurname;
     private Date date;
 
-    public Max30102(String status, String hr, String spo2, String diff, String personName, String personSurname, Date date) {
+    public Max30102(String status, String hr, String spo2,String ired, String red, String diff, String personName, String personSurname, Date date) {
         this.status = status;
         this.hr = hr;
         this.spo2 = spo2;
+        this.ired = ired;
+        this.red = red;
         this.diff = diff;
         this.personName = personName;
         this.personSurname = personSurname;
         this.date = date;
+    }
+
+    public String getIred() {
+        return ired;
+    }
+
+    public void setIred(String ired) {
+        this.ired = ired;
+    }
+
+    public String getRed() {
+        return red;
+    }
+
+    public void setRed(String red) {
+        this.red = red;
     }
 
     public String getId() {

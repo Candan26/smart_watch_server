@@ -99,7 +99,7 @@ public class Max30102Controller {
         try {
             Max30102 max30102 = max30102Service.lbq.poll();
             if(max30102 == null){
-                max30102 = new Max30102("","","","","","",null);
+                max30102 = new Max30102("","","","","","","" ,"",null);
             }
             return ResponseEntity.ok(max30102);
         } catch (Exception ex) {
@@ -177,7 +177,7 @@ public class Max30102Controller {
         logger.info("Deleting contactId by [" + names + "] and  [" + surnames + "]");
         List<Max30102> max30102s = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
-            max30102s.add(new Max30102("", "", "", "", names.get(i), surnames.get(i), null));
+            max30102s.add(new Max30102("", "", "", "","","", names.get(i), surnames.get(i), null));
         }
         max30102Service.deleteByNameSurname(max30102s);
         return ResponseEntity.ok().build();

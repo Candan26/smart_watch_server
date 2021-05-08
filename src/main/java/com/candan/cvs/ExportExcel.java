@@ -74,11 +74,11 @@ public class ExportExcel {
         XSSFWorkbook wbHeart = new XSSFWorkbook();
         XSSFSheet sheet = wbHeart.createSheet("Data");
         Map<String, Object[]> data = new TreeMap<String, Object[]>();
-        data.put("1", new Object[]{"ID", "STATUS", "HR", "SPO2", "DIFF", "PERSON_NAME", "PERSON_SURNAME", "DATE"});
+        data.put("1", new Object[]{"ID", "STATUS", "HR", "SPO2","IRED", "RED", "DIFF", "PERSON_NAME", "PERSON_SURNAME", "DATE"});
         int i = 1;
         for (Max30102 m : max30102List) {
             i++;
-            data.put("" + i, new Object[]{"" + m.getId(), m.getStatus(), m.getHr(), m.getSpo2(),
+            data.put("" + i, new Object[]{"" + m.getId(), m.getStatus(), m.getHr(), m.getSpo2(),m.getIred(), m.getRed(),
                     m.getDiff(),  m.getPersonName(), m.getPersonSurname(), m.getDate()});
         }
         setExcelTables(data, sheet);
