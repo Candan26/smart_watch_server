@@ -102,7 +102,7 @@ public class Max3003Controller {
         try {
             Max3003 max3003 = max3003Service.lbq.poll();
             if(max3003 == null){
-                max3003 = new Max3003("","","","","",null);
+                max3003 = new Max3003("","","","","","",null);
             }
             return ResponseEntity.ok(max3003);
         } catch (Exception ex) {
@@ -183,7 +183,7 @@ public class Max3003Controller {
         List<Max3003> max3003s = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
 
-            max3003s.add(new Max3003("", "", "", names.get(i), surnames.get(i), null));
+            max3003s.add(new Max3003("", "", "","", names.get(i), surnames.get(i), null));
         }
         max3003Service.deleteByNameSurname(max3003s);
         return ResponseEntity.ok().build();

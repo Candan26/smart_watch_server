@@ -1,9 +1,13 @@
 package com.candan.mongo.swb;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
+@Setter
+@Getter
 public class SkinResistance {
     @Id
     private String id;
@@ -18,54 +22,6 @@ public class SkinResistance {
         this.srValue = srValue;
         this.personName = personName;
         this.personSurname = personSurname;
-        this.date = date;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getSrValue() {
-        return srValue;
-    }
-
-    public void setSrValue(String srValue) {
-        this.srValue = srValue;
-    }
-
-    public String getPersonName() {
-        return personName;
-    }
-
-    public void setPersonName(String personName) {
-        this.personName = personName;
-    }
-
-    public String getPersonSurname() {
-        return personSurname;
-    }
-
-    public void setPersonSurname(String personSurname) {
-        this.personSurname = personSurname;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
         this.date = date;
     }
 
