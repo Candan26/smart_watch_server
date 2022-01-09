@@ -1,8 +1,10 @@
 package com.candan.services;
 
+import com.candan.interfaces.Max3003RepositoryReal;
 import com.candan.mongo.swb.Max3003;
 import com.candan.exceptions.BadResourceException;
 import com.candan.interfaces.Max3003Repository;
+import com.candan.mongo.swb.Max3003Real;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +26,9 @@ public class Max3003Service {
 
     @Autowired
     private Max3003Repository max3003Repository;
+
+    @Autowired
+    private Max3003RepositoryReal max3003RepositoryReal;
 
     public void update(Max3003 max3003)throws BadResourceException, org.springframework.data.rest.webmvc.ResourceNotFoundException {
         try {
@@ -70,11 +76,41 @@ public class Max3003Service {
 
     public Max3003 save(Max3003 max3003){
         try {
+            List<Max3003Real> max3003RealList = getDataObjFromRawData(max3003);
+            for(Max3003Real m :max3003RealList )
+                max3003RepositoryReal.save(m);
             return max3003Repository.save(max3003);
         } catch (Exception ex) {
             logger.error("Exception on", ex);
             return null;
         }
+    }
+
+    private List<Max3003Real> getDataObjFromRawData(Max3003 max3003) {
+        List<Max3003Real> max3003RealList = new ArrayList<>();
+        Date dateOfMax3003 = max3003.getDate();
+        long firstDateTime = 0;
+        if(dateOfMax3003==null){
+            firstDateTime = 1;
+        }else{
+            firstDateTime =  dateOfMax3003.getTime();
+        }
+        List<Integer> ecgDataList = getParsedDataOfEcg(max3003.getEcg());
+        for (Integer i : ecgDataList){
+            Max3003Real  m = new Max3003Real(max3003.getStatus(),i,"","",
+                    max3003.getPersonName(),max3003.getPersonSurname(),new Date(firstDateTime++));
+                max3003RealList.add(m);
+        }
+        return max3003RealList;
+    }
+
+    private List<Integer> getParsedDataOfEcg(String ecg) {
+        List<Integer> ls = new ArrayList<>();
+        for( int i = 0; i<ecg.length(); i = i+4){
+            String s = ecg.substring(i,i+4);
+            ls.add(Integer.parseInt(s,16));
+        }
+        return ls;
     }
 
     public List<Max3003> findListByNameSurname(String name, String surname){

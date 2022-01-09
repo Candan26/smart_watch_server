@@ -1,7 +1,8 @@
 package com.candan.services;
 
-import com.candan.mongo.swb.Max3003;
-import com.candan.mongo.swb.Max30102;
+import com.candan.interfaces.Max3003RepositoryReal;
+import com.candan.interfaces.Max30102RepositoryReal;
+import com.candan.mongo.swb.*;
 import com.candan.exceptions.BadResourceException;
 import com.candan.interfaces.Max30102Repository;
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,6 +23,9 @@ public class Max30102Service {
 
     @Autowired
     private Max30102Repository max30102Repository;
+
+    @Autowired
+    private Max30102RepositoryReal max30102RepositoryReal;
 
     public LinkedBlockingQueue<Max30102> lbq = new LinkedBlockingQueue<>();
 
@@ -53,11 +58,65 @@ public class Max30102Service {
 
     public Max30102 save(Max30102 max30102) {
         try {
+            List<Max30102Real> max30102List = getDataObjFromRawData(max30102);
+            for(Max30102Real sr :max30102List )
+                max30102RepositoryReal.save(sr);
             return max30102Repository.save(max30102);
         } catch (Exception ex) {
             logger.error("Exception on", ex);
             return null;
         }
+    }
+
+    private List<Max30102Real> getDataObjFromRawData(Max30102 max30102) {
+        List<Max30102Real> max30102RealList = new ArrayList<>();
+        Date date = max30102.getDate();
+        long firstDateTime = 0;
+        if(date==null){
+            firstDateTime = 1;
+        }else{
+            firstDateTime =  date.getTime();
+        }
+        List<Integer> irList = getParsedData(max30102.getIred());
+        List<Integer> rList = getParsedData(max30102.getRed());
+        List<Integer> hrList = getParsedByteData(max30102.getHr());
+        List<Integer> spo2List = getParsedByteData(max30102.getSpo2());
+        int i = 0;
+        int r = 0;
+        int hr = 0;
+        int spo2 = 0;
+        for (Integer in : irList){
+            if(i<rList.size()){
+               r = rList.get(i);
+            }
+            if(i< hrList.size()){
+                hr = hrList.get(i);
+            }
+            if(i < spo2List.size()){
+                spo2 = spo2List.get(i);
+            }
+            i++;
+            Max30102Real  mr = new Max30102Real(max30102.getStatus(),hr,spo2,in,r,"",
+                    max30102.getPersonName(),max30102.getPersonSurname(),new Date(firstDateTime++));
+            max30102RealList.add(mr);
+        }
+        return max30102RealList;
+    }
+    private List<Integer> getParsedData(String srValue) {
+        List<Integer> li = new ArrayList<>();
+        for( int i = 0; i<srValue.length(); i = i+8){
+            String s = srValue.substring(i,i+8);
+            li.add(Integer.parseInt(s,16));
+        }
+        return li;
+    }
+    private List<Integer> getParsedByteData(String srValue) {
+        List<Integer> li = new ArrayList<>();
+        for( int i = 0; i<srValue.length(); i = i+2){
+            String s = srValue.substring(i,i+2);
+            li.add(Integer.parseInt(s,16));
+        }
+        return li;
     }
 
     public List<Max30102> findListByNameSurname(String name, String surname) {

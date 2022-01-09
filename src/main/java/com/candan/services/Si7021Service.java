@@ -1,9 +1,12 @@
 package com.candan.services;
 
+import com.candan.interfaces.Si7021RepositoryReal;
 import com.candan.mongo.swb.Max30102;
 import com.candan.mongo.swb.Si7021;
 import com.candan.exceptions.BadResourceException;
 import com.candan.interfaces.Si7021Repository;
+import com.candan.mongo.swb.Si7021Real;
+import com.candan.mongo.swb.SkinResistanceReal;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +27,9 @@ public class Si7021Service {
 
     @Autowired
     private Si7021Repository si7021Repository;
+
+    @Autowired
+    private Si7021RepositoryReal si7021RepositoryReal;
 
     public void update(Si7021 si7021) throws BadResourceException, org.springframework.data.rest.webmvc.ResourceNotFoundException {
         try {
@@ -52,6 +59,10 @@ public class Si7021Service {
 
     public Si7021 save(Si7021 si7021) {
         try {
+            //si7021RepositoryReal
+            List<Si7021Real> si7021List = getDataObjFromRawData(si7021);
+            for(Si7021Real sr :si7021List )
+                si7021RepositoryReal.save(sr);
             return si7021Repository.save(si7021);
         } catch (Exception ex) {
             logger.error("Exception on", ex);
@@ -59,6 +70,40 @@ public class Si7021Service {
         }
     }
 
+    private List<Si7021Real> getDataObjFromRawData(Si7021 si7021) {
+        List<Si7021Real> Si7021List = new ArrayList<>();
+        Date dateOfSi7021 = si7021.getDate();
+        long firstDateTime = 0;
+        if(dateOfSi7021==null){
+            firstDateTime = 1;
+        }else{
+            firstDateTime =  dateOfSi7021.getTime();
+        }
+        List<Float> getHumidityDataList = getParsedDataSkinResistance(si7021.getHumidity());
+        List<Float> getTemperatureList = getParsedDataSkinResistance(si7021.getTemperature());
+        int i= 0;
+        float ft = 0;
+        for (Float fh : getHumidityDataList){
+            if(i<getTemperatureList.size()){
+                ft = getTemperatureList.get(i);
+            }
+            i++;
+            Si7021Real  srl = new Si7021Real(si7021.getStatus(),fh,ft,
+                    si7021.getPersonName(),si7021.getPersonSurname(),new Date(firstDateTime++));
+            Si7021List.add(srl);
+        }
+        return Si7021List;
+    }
+    private List<Float> getParsedDataSkinResistance(String srValue) {
+        List<Float> lf = new ArrayList<>();
+        for( int i = 0; i<srValue.length(); i = i+8){
+            String s =srValue.substring(i,i+8);
+            Long l= Long.parseLong(s, 16);
+            Float f = Float.intBitsToFloat(l.intValue());
+            lf.add(f);
+        }
+        return lf;
+    }
     public List<Si7021> findListByNameSurname(String name, String surname) {
         try {
             return si7021Repository.findByPersonName(name, surname);

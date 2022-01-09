@@ -127,8 +127,10 @@ public class Max3003Controller {
     public ResponseEntity<Max3003> addMax3003Sensor(@Valid @RequestBody Max3003 max3003Sensor) throws URISyntaxException {
         try {
             logger.info("Adding new Max3003 contact value [" + max3003Sensor.toString() + "]");
-            Max3003 newMax3003Sensor = max3003Service.save(max3003Sensor);
-            return ResponseEntity.created(new URI("/api/max3003/" + newMax3003Sensor.getId())).body(max3003Sensor);
+            synchronized (this){
+                Max3003 newMax3003Sensor = max3003Service.save(max3003Sensor);
+            }
+            return ResponseEntity.created(new URI("/api/max3003/" )).body(max3003Sensor);
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

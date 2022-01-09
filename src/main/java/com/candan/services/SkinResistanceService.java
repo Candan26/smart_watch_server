@@ -1,9 +1,12 @@
 package com.candan.services;
 
+import com.candan.interfaces.SkinResistanceRepositoryReal;
+import com.candan.mongo.swb.Max3003Real;
 import com.candan.mongo.swb.Si7021;
 import com.candan.mongo.swb.SkinResistance;
 import com.candan.exceptions.BadResourceException;
 import com.candan.interfaces.SkinResistanceRepository;
+import com.candan.mongo.swb.SkinResistanceReal;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +27,9 @@ public class SkinResistanceService {
 
     @Autowired
     private SkinResistanceRepository skinResistanceRepository;
+
+    @Autowired
+    private SkinResistanceRepositoryReal skinResistanceRepositoryReal;
 
     public LinkedBlockingQueue<SkinResistance> lbq = new LinkedBlockingQueue<>();
 
@@ -71,12 +78,43 @@ public class SkinResistanceService {
 
     public SkinResistance save(SkinResistance skinResistance) {
         try {
+            List<SkinResistanceReal> SkinResistanceList = getDataObjFromRawData(skinResistance);
+            for(SkinResistanceReal sr :SkinResistanceList )
+                skinResistanceRepositoryReal.save(sr);
             return skinResistanceRepository.save(skinResistance);
         } catch (Exception ex) {
             logger.error("Exception on", ex);
             return null;
         }
     }
+
+    private List<SkinResistanceReal> getDataObjFromRawData(SkinResistance skinResistance) {
+        List<SkinResistanceReal> SkinResistanceRealList = new ArrayList<>();
+        Date dateOfSkin = skinResistance.getDate();
+        long firstDateTime = 0;
+        if(dateOfSkin==null){
+            firstDateTime = 1;
+        }else{
+            firstDateTime =  dateOfSkin.getTime();
+        }
+        List<Short> skinResistanceDataList = getParsedDataSkinResistance(skinResistance.getSrValue());
+        for (Short sr : skinResistanceDataList){
+            SkinResistanceReal  srr = new SkinResistanceReal(skinResistance.getStatus(),(int)sr,
+                    skinResistance.getPersonName(),skinResistance.getPersonSurname(),new Date(firstDateTime++));
+            SkinResistanceRealList.add(srr);
+        }
+        return SkinResistanceRealList;
+    }
+
+    private List<Short> getParsedDataSkinResistance(String srValue) {
+        List<Short> ls = new ArrayList<>();
+        for( int i = 0; i<srValue.length(); i = i+4){
+            String s =srValue.substring(i,i+4);
+            ls.add(Short.parseShort(s,16));
+        }
+        return ls;
+    }
+
 
     public List<SkinResistance> findListByNameSurname(String name, String surname) {
         try {
