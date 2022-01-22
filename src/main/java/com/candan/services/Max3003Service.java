@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -95,19 +96,46 @@ public class Max3003Service {
         }else{
             firstDateTime =  dateOfMax3003.getTime();
         }
-        List<Integer> ecgDataList = getParsedDataOfEcg(max3003.getEcg());
+        List<Integer> ecgDataList = getParsedDataOfShort(max3003.getEcg());
+        List<Float> bpmDataList = getParsedDataOfFloat(max3003.getBpm());
+        List<Integer> rrDataList = getParsedDataOfInt(max3003.getBpm());
+        double averageBpm = ecgDataList.stream().mapToDouble(bpmDataList::get).average().orElse(0);
+        double averageRr = ecgDataList.stream().mapToDouble(rrDataList::get).average().orElse(0);
+
         for (Integer i : ecgDataList){
-            Max3003Real  m = new Max3003Real(max3003.getStatus(),i,"","",
-                    max3003.getPersonName(),max3003.getPersonSurname(),new Date(firstDateTime++));
+            Max3003Real  m = new Max3003Real(max3003.getStatus(),i,""+averageRr,""+averageBpm,
+                    max3003.getPersonName(),max3003.getPersonSurname(),new Date(firstDateTime));
+                    firstDateTime= firstDateTime +8;//128 sps aprx 7.82 for sec ms for each data
                 max3003RealList.add(m);
         }
         return max3003RealList;
     }
 
-    private List<Integer> getParsedDataOfEcg(String ecg) {
+    private List<Float> getParsedDataOfFloat(String floatString) {
+        List<Float> ls = new ArrayList<>();
+        //bpm is uchar data
+        for( int i = 0; i<floatString.length(); i = i+8){
+            String s = floatString.substring(i,i+8);
+            ls.add(Float.parseFloat(s));
+        }
+        return ls;
+    }
+
+    private List<Integer> getParsedDataOfInt(String intString) {
         List<Integer> ls = new ArrayList<>();
-        for( int i = 0; i<ecg.length(); i = i+4){
-            String s = ecg.substring(i,i+4);
+        //bpm is uchar data
+        for( int i = 0; i<intString.length(); i = i+8){
+            String s = intString.substring(i,i+8);
+            ls.add(Integer.parseUnsignedInt(s,16));
+        }
+        return ls;
+    }
+
+    private List<Integer> getParsedDataOfShort(String shortString) {
+        List<Integer> ls = new ArrayList<>();
+        //ecg short data
+        for( int i = 0; i<shortString.length(); i = i+4){
+            String s = shortString.substring(i,i+4);
             ls.add(Integer.parseInt(s,16));
         }
         return ls;

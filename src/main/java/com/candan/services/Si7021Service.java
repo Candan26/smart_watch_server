@@ -94,6 +94,7 @@ public class Si7021Service {
         }
         return Si7021List;
     }
+
     private List<Float> getParsedDataSkinResistance(String srValue) {
         List<Float> lf = new ArrayList<>();
         for( int i = 0; i<srValue.length(); i = i+8){
@@ -104,6 +105,7 @@ public class Si7021Service {
         }
         return lf;
     }
+
     public List<Si7021> findListByNameSurname(String name, String surname) {
         try {
             return si7021Repository.findByPersonName(name, surname);
