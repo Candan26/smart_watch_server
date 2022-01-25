@@ -13,13 +13,13 @@ public class Max3003Real {
     private String id;
     private String status;
     private int ecg;
-    private String rr;
-    private String bpm;
+    private double rr;
+    private double bpm;
     private String personName;
     private String personSurname;
     private Date date;
 
-    public Max3003Real(String status, int ecg, String rr, String bpm,String personName, String personSurname, Date date) {
+    public Max3003Real(String status, int ecg, double rr, double bpm,String personName, String personSurname, Date date) {
         this.status = status;
         this.ecg = ecg;
         this.rr = rr;

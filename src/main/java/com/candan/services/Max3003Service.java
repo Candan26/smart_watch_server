@@ -97,13 +97,32 @@ public class Max3003Service {
             firstDateTime =  dateOfMax3003.getTime();
         }
         List<Integer> ecgDataList = getParsedDataOfShort(max3003.getEcg());
-        List<Float> bpmDataList = getParsedDataOfFloat(max3003.getBpm());
+        //List<Float> bpmDataList = getParsedDataOfFloat(max3003.getBpm());
         List<Integer> rrDataList = getParsedDataOfInt(max3003.getBpm());
-        double averageBpm = ecgDataList.stream().mapToDouble(bpmDataList::get).average().orElse(0);
-        double averageRr = ecgDataList.stream().mapToDouble(rrDataList::get).average().orElse(0);
+        double averageBpm= 0;
+        double averageRr = 0;
+        /*
+        for( Float f : bpmDataList){
+            averageBpm = averageBpm + f;
+        }
+        if (bpmDataList.size()>0){
+            averageBpm = averageBpm/bpmDataList.size();
+        }
+
+         */
+        for( Integer i : rrDataList){
+            averageRr = averageRr + i;
+        }
+        if (rrDataList.size()>0){
+            averageRr = averageRr/rrDataList.size();
+        }
+        //if(!bpmDataList.isEmpty())
+        //    averageBpm = ecgDataList.stream().mapToDouble(bpmDataList::get).average().orElse(0);
+        //if(!rrDataList.isEmpty())
+        //    averageRr = ecgDataList.stream().mapToDouble(rrDataList::get).average().orElse(0);
 
         for (Integer i : ecgDataList){
-            Max3003Real  m = new Max3003Real(max3003.getStatus(),i,""+averageRr,""+averageBpm,
+            Max3003Real  m = new Max3003Real(max3003.getStatus(),i,averageRr,averageBpm,
                     max3003.getPersonName(),max3003.getPersonSurname(),new Date(firstDateTime));
                     firstDateTime= firstDateTime +8;//128 sps aprx 7.82 for sec ms for each data
                 max3003RealList.add(m);
