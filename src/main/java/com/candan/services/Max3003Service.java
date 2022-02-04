@@ -155,7 +155,7 @@ public class Max3003Service {
         //ecg short data
         for( int i = 0; i<shortString.length(); i = i+4){
             String s = shortString.substring(i,i+4);
-            ls.add(Integer.parseInt(s,16));
+            ls.add((int)Integer.valueOf(s,16).shortValue());
         }
         return ls;
     }
