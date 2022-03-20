@@ -17,10 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 @Component
 public class ExportExcel {
@@ -116,6 +113,8 @@ public class ExportExcel {
                     cell.setCellValue((String) obj);
                 else if (obj instanceof Integer)
                     cell.setCellValue((Integer) obj);
+                else if (obj instanceof Date)
+                    cell.setCellValue(((Date) obj).toString());
             }
         }
     }

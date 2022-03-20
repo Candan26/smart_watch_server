@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -127,6 +129,14 @@ public class Max30102Service {
             return null;
         }
     }
+    public List<Max30102> findListByNameSurnameFromReal(String name, String surname) {
+        try {
+            return max30102RepositoryReal.findByPersonName(name, surname);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
+        }
+    }
 
     public List<Max30102> findListByStatus(String status) {
         try {
@@ -182,5 +192,11 @@ public class Max30102Service {
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
         }
+    }
+
+    public List<Max30102> findListByNameSurnameAndDateFromReal(String name, String surname, String date_from, String date_to) throws ParseException {
+        Date from = new SimpleDateFormat("yyyy-MM-dd").parse(date_from);   //new Date("2022-02-04");
+        Date to = new SimpleDateFormat("yyyy-MM-dd").parse(date_to);   //new Date("2022-02-04");
+        return max30102RepositoryReal.findByDateBetweenAndPersonNameAndPersonSurname(from,to,name,surname);
     }
 }

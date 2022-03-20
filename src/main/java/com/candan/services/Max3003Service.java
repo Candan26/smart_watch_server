@@ -12,8 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -169,6 +169,15 @@ public class Max3003Service {
         }
     }
 
+    public List<Max3003> findListByNameSurnameFromReal(String name, String surname){
+        try {
+            return max3003RepositoryReal.findByPersonName(name, surname);
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
+        }
+    }
+
     public List<Max3003> findListByStatus(String status){
         try {
             return max3003Repository.findByStatus(status);
@@ -201,6 +210,18 @@ public class Max3003Service {
             Pageable pageableRequest = PageRequest.of(0, maxVal);
             Page<Max3003> page = max3003Repository.findAll(pageableRequest);
             return page.getContent();
+        } catch (Exception ex) {
+            logger.error("Exception on ", ex);
+            return null;
+        }
+    }
+
+
+    public List<Max3003> findListByNameSurnameAndDateFromReal(String name, String surname, String date_from , String date_to) {
+        try {
+            Date from = new SimpleDateFormat("yyyy-MM-dd").parse(date_from);   //new Date("2022-02-04");
+            Date to = new SimpleDateFormat("yyyy-MM-dd").parse(date_to);   //new Date("2022-02-04");
+            return max3003RepositoryReal.findByDateBetweenAndPersonNameAndPersonSurname(from,to,name,surname);
         } catch (Exception ex) {
             logger.error("Exception on ", ex);
             return null;

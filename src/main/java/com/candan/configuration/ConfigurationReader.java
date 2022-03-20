@@ -15,7 +15,7 @@ public class ConfigurationReader {
 
     public static class MyConfig {
 
-        //@Value("${mail.thread.timeInSec}")
+        @Value("${mail.thread.timeInSec}")
         private Long mailThreadTimeInSec;
         //@Value("${mail.website.maxMailCount}")
         private Long websiteMaxMailCount;
